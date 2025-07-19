@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Code Quest Chronicles - Level 2: The Reflection Engine</title>
+    <style>
+    body.reflection-engine{
+    font-family: 'Segoe UI', sans-serif;
+    padding: 60px 100px;
+    max-width: 700px;
+    margin: auto;
+    background-color: #140f1e;
+    color: #e6e0f8;
+    line-height: 1.6;
+    transition: background-color 10s ease;
+  }
+  .story-box, .challenge-box{
+    background-color: #261c35;
+    border-left: 6px solid #9b59b6;
+    padding: 30px;
+    margin-top: 40px;
+    max-width: 600px;
+    box-shadow: 0 0 15px rgba(155, 89, 182, 0.2);
+    border-radius: 10px;
+    line-height: 1.6;
+    transition: box-shadow 0.3s ease;
+  }
+  #start-btn{
+    margin-top: 20px;
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #8e44ad;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  #start-btn:hover{
+    background-color: #732d91;
+  }
+  pre {
+    background-color: #382747;
+    padding: 10px;
+    border-radius: 6px;
+    font-family: monospace;
+    color: #f5e6ff;
+  }
+  textarea {
+    width: 100%;
+    font-family: monospace;
+    padding: 10px;
+    border: 1px solid #9b59b6;
+    background-color: #2d1b47;
+    color: #f5e6ff;
+    border-radius: 5px;
+  }
+  #score-display {
+    position: sticky;
+    top: 0;
+    background-color: #140f1e;
+    padding: 10px 0;
+    z-index: 999;
+    text-align: center;
+    font-weight: bold;
+    font-size: 18px;
+    box-shadow: 0 2px 4px rgba(155, 89, 182, 0.2);
+  }
+  .hidden{
+    display: none;
+  }
+  </style>
+  </head>
+  <body class="reflection-engine">
+    <div class="score-display">
+      🧮 Score: <span id="score">0</span>
+    </div>
+    <div class="story-box">
+      <h2>Level 2: The Reflection-Engine 🪞</h2>
+      <p>
+      🌀 The loops have led you here — the <strong>Reflection Engine</strong>.<br>A mysterious core, hidden beneath the labyrinth,
+      powers the endless mirrors above<br> But something is wrong. Functions repeat forever. Conditions misfire.<br>
+      You must fix the engine from within, before you are trapped in recursion...forever.
+    </p>
+    <button id="start-btn">🧠 Begin Debugging</button>
+  </div>
+  <div class="challenge-box hidden" id="challenge-1">
+    <h3>🧩Challenge: Infinite Echoes</h3>
+    <p>What is the output of this code?</p>
+    <pre>
+      def echo(n):
+        if(n<=0):
+          return
+        print(n)
+        echo(n-1)
+        print(n)
+      echo(2)
+    </pre>
+    <textarea id="user-answer" row="4" placeholder="Enter the output here"></textarea>
+    <button id="submit-btn">Submit</button>
+    <p id="feedback"></p>
+  </div>
+  <script src="Background-Music/music.js"></script>
+  <script>
+    let score=0;
+    let challenge1Completed=false;
+    const clean = (str) => str.replace(/\r/g, '').trim();
+    function updateScore(points)
+    {
+      score+=points;
+      document.getElementById("score").textContent=score;
+    }
+    document.getElementById("start-btn").addEventListener("click",()=>{
+      document.querySelector(".story-box").classList.add("hidden");
+      document.getElementById("challenge-1").classList.remove("hidden");
+    });
+    //define the correct answer
+    const correctAnswer1="2\n1\n1\n2";
+    document.getElementById("submit-btn").addEventListener("click",()=>{
+      const userinput1=document.getElementById("user-answer").value.trim();
+      const feedback1=document.getElementById("feedback");
+      if(challenge1Completed)
+      {
+        feedback1.textContent = "✅ You've already completed this challenge!";
+        feedback1.style.color = "gray";
+      }
+      else if(userinput1===correctAnswer1){
+        feedback1.innerHTML = `✅ Correct! You've decoded the echoes.<br> You got 10 points!`;
+        feedback1.style.color="lightgreen";
+        updateScore(10);//+10 points for Challenge1
+        challenge1Completed=true;
+        //document.getElementById("challenge-box-2").classList.remove("hidden");
+        //showDialogue("Impressive recursion skills! But beware — the next challenge will twist your logic even further.", "challenge-box-2");
+      }
+      else
+      {
+        feedback1.textContent="❌ Incorrect. Look at how the function prints when going down and up";
+        feedback1.style.color="crimson";
+      }
+    });
+  </script>
+</body>
+</html>

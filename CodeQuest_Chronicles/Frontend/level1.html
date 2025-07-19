@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Code Quest Chronicles</title>
+    <style>
+        body.mirror-labyrinth {
+            font-family: Arial, sans-serif;
+            padding: 60px 100px;
+            max-width: 700px;
+            margin: auto;
+            background-color: #fefefe;
+            line-height: 1.6;
+            color: #111;
+        }
+        .story-box,.challenge-box{
+            background-color: #fff;
+            border-left: 6px solid #6c5ce7;
+            padding: 30px;
+            margin-top: 40px;
+            max-width: 600px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+            border-radius: 10px;
+            line-height:1.6;
+
+        }
+        .hidden{
+            display: none;
+        }
+        #start-btn{
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #6c5ce7;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        pre{
+            background-color: #f4f4f4;
+            padding: 10px;
+            border-radius: 6px;
+            font-family: monospace;
+        }
+        #start-btn:hover{
+            background-color: #5b4bc0;
+        }
+        textarea {
+            width: 100%;
+            font-family: monospace;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        #score-display{
+            position: fixed;
+            border-radius: 10px;
+            top: 10px;
+            margin-left:-70px;
+            background-color: #fefefe;
+            padding: 10px 0;
+            width: 150px;
+            z-index: 999;
+            text-align: left;
+            box-shadow: 0 -2px 4px rgba(0,0,0,0.1), 0 2px 4px rgba(0,0,0,0.1);
+            transform: translateX(-20px);
+        }
+        
+    </style>
+</head>
+<body class="mirror-labyrinth">
+    <!--LEVEL 1-->
+    <div id="score-display" style="font-weight:bold; font-size: 18px;">
+        🧮Score: <span id="score">0</span>
+    </div>
+    <div class="story-box" id="story-output">
+        <h2>Your Quest Begins.</h2>
+        <p id="story-text">
+            🧙Welcome, brave coder.<br>
+      You find yourself in the <strong>Mirror Labyrinth</strong>, a place where every step loops back to the beginning.<br>
+      To escape, you must unravel the recursive code tangled within its infinite reflections.<br>
+      Can you break free from the function that calls itself?
+    </p>
+    <button id="start-btn">🛡️Yes, I'm Ready!</button>
+    </div>
+    <!-- Level 1 Challenge 1-->
+    <div class="challenge-box hidden" id="challenge-box">
+        <h3>🧠 <strong>Challenge 1</strong></h3>
+        <p>What is the output of this code</p>
+        <pre>
+            for i in range(3):
+                print(i)
+        </pre>
+        <textarea id="user-input-1" rows="3" placeholder="Enter your answer here"></textarea>
+        <button id="submit-btn-1">Submit</button>
+        <p id="feedback-1"></p>
+    </div>
+    <!-- Level 1 Challenge 2-->
+    <div class="challenge-box hidden" id="challenge-box-2">
+        <h3>🧠 <strong>Challenge 2</strong></h3>
+        <p>What will be printed by this recursive function?</p>
+        <pre>
+        def mystery(n):
+            if n==0:
+                return
+            mystery(n-1)
+            print(n)
+        mystery(3)
+        </pre>
+        <textarea id="user-input-2" rows="3" placeholder="Enter your answer here"></textarea>
+        <button id="submit-btn-2">Submit</button>
+        <p id="feedback-2"></p>
+    </div>
+    <!-- Level 1challenge 3-->
+    <div class="challenge-box hidden" id="challenge-box-3">
+        <h3>🧠 <strong>Challenge 3</strong></h3>
+        <p>What does this code print?</p>
+        <pre>
+            x=5
+            if(x>3):
+                print("Greater");
+            else:
+                print("Lesser");
+        </pre>
+        <textarea id="user-input-3" rows="3" placeholder="Enter your answers here"></textarea>
+        <button id="submit-btn-3">Submit</button>
+        <p id="feedback-3"></p>
+    </div id="music-controls" style="margin-top: 20px;">
+    <button id="mute-btn">🔇Mute</button>
+    <button id="vol-down">➖Mute</button>
+    <button id="vol-down">➕Mute</button>
+    <span id="mute-btn">🔊Volume:50%</span>
+    <div>
+    </div>
+    <script src="Background-Music/music.js"></script>
+    <script>
+        let score=0;
+        const clean = (str) => str.replace(/\r/g, '').trim();
+        let challenge1Completed=false;
+        let challenge2Completed=false;
+        let challenge3Completed=false;
+        function updateScore(points){
+            score+=points;
+            document.getElementById("score").textContent=score;
+        }
+        function showLevelCompletionButtons(feedback3) {
+            const buttonRow = document.createElement("div");
+            buttonRow.style.display = "flex";
+            buttonRow.style.gap = "15px";
+            buttonRow.style.marginTop = "20px";
+            buttonRow.style.flexWrap = "wrap"; // optional for responsiveness
+            //Restart Button
+            const restartBtn = document.createElement("button");
+            restartBtn.textContent = "🔁 Restart Quest";
+            restartBtn.style.padding = "10px 20px";
+            restartBtn.style.backgroundColor = "#6c5ce7";
+            restartBtn.style.color = "#fff";
+            restartBtn.style.border = "none";
+            restartBtn.style.borderRadius = "5px";
+            restartBtn.style.cursor = "pointer";
+            restartBtn.onclick = () => location.reload();
+            // Next Level Button
+            const nextBtn = document.createElement("button");
+            nextBtn.textContent = "➡️ Go to Level 2";
+            nextBtn.style.padding = "10px 20px";
+            nextBtn.style.backgroundColor = "#00b894";
+            nextBtn.style.color = "#fff";
+            nextBtn.style.border = "none";
+            nextBtn.style.borderRadius = "5px";
+            nextBtn.style.cursor = "pointer";
+            nextBtn.onclick = () => window.location.href = "level2.html";
+            // Append both to the row
+            buttonRow.appendChild(restartBtn);
+            buttonRow.appendChild(nextBtn);
+            // Append row to the feedback box
+            feedback3.appendChild(buttonRow);
+        }
+        function showDialogue(text, targetId){
+            let existingBox = document.getElementById(`dialogue-for-${targetId}`);
+            if(existingBox){
+                existingBox.querySelector("span").textContent = text;
+                return;
+            }
+            const dialogueBox = document.createElement("div");
+            dialogueBox.id = `dialogue-for-${targetId}`;
+            dialogueBox.style.display = "flex";
+            dialogueBox.alignItems = "flex-start";
+            dialogueBox.style.marginTop = "30px";
+            dialogueBox.style.background = "#f3f0ff";
+            dialogueBox.style.borderLeft = "5px solid #6c5ce7";
+            dialogueBox.style.padding = "15px";
+            dialogueBox.style.borderRadius = "10px";
+            dialogueBox.style.lineHeight = "1.6";
+            dialogueBox.style.boxShadow="0 0 8px rgba(0,0,0,0.05)"
+            dialogueBox.innerHTML = `<img src="https://emojicdn.elk.sh/🧙"
+            alt="Guide Wizard Emoji"
+            style="width: 40px; 
+            height: 40px; 
+            margin-right: 15px;">
+            <div>
+                <strong>Guide:</strong> <span>${text}</span>
+            </div>`;
+            const target = document.getElementById(targetId);
+            target.parentNode.insertBefore(dialogueBox, target);
+            }
+        let step=1
+        const startBtn=document.getElementById("start-btn");
+        const storyText=document.getElementById("story-text");
+        startBtn.addEventListener("click",()=>{
+            if(step===1){
+                storyText.innerText="⚔️ You enter the Tower of Infinite Loops.\nEach floor holds a new challenge: nested conditions, unreachable statements, and logic traps.\nOnly clean logic will lead you out.";
+                startBtn.textContent="🗡️ Begin Quest";
+                step=2;
+            }
+            else if(step===2)
+            {
+                music.play();
+                document.getElementById("challenge-box").classList.remove("hidden");
+                document.getElementById("story-output").classList.add("hidden");
+                showDialogue("You’ve made the first step, young coder. But the maze gets trickier ahead!", "challenge-box");
+            }
+        });
+        // Level 1challenge 1
+        const submitBtn1=document.getElementById("submit-btn-1");
+        const userInput1=document.getElementById("user-input-1");
+        const feedback1=document.getElementById("feedback-1");
+        //define the correct answer
+        const correctAnswer1="0\n1\n2";
+        //When submit button is clicked
+        submitBtn1.addEventListener("click",()=>{
+            const userAnswer=clean(userInput1.value);
+            if(challenge1Completed)
+            {
+                feedback1.textContent = "✅ You've already completed this challenge!";
+                feedback1.style.color = "gray";
+            }
+            else if(userAnswer===correctAnswer1){
+                feedback1.innerHTML = `✅ Correct! You passed the final logic trap.<br>🎯 You got 10 points!`;
+                feedback1.style.color="green";
+                updateScore(10);//+10 points for Challenge1
+                challenge1Completed=true;
+                document.getElementById("challenge-box-2").classList.remove("hidden");
+                showDialogue("Impressive recursion skills! But beware — the next challenge will twist your logic even further.", "challenge-box-2");
+            }
+            else
+            {
+                feedback1.textContent="❌ Try again! Think about how loops work.";
+                feedback1.style.color="red";
+            }
+        });
+        // Level 1challenge 2
+        const submitBtn2=document.getElementById("submit-btn-2");
+        const userInput2=document.getElementById("user-input-2");
+        const feedback2=document.getElementById("feedback-2");
+        //define the correct answer
+        const correctAnswer2="1\n2\n3";
+        //When submit button is clicked
+        submitBtn2.addEventListener("click",()=>{
+            const userAnswer=clean(userInput2.value);
+            if(challenge2Completed)
+            {
+                feedback2.textContent = "✅ You've already completed this challenge!";
+                feedback2.style.color = "gray";
+            }
+            else if(userAnswer===correctAnswer2){
+            feedback2.innerHTML = `✅ Correct! You've unraveled the recursive riddle.<br>🎯 You got 15 points!`;
+                feedback2.style.color="green";
+                updateScore(15);//+15 points for Challenge2
+                challenge2Completed=true;
+                document.getElementById("challenge-box-3").classList.remove("hidden");
+                showDialogue("Brilliant! You've conquered Level 1. Prepare yourself for Level 2...", "challenge-box-3");
+            }
+            else
+            {
+                feedback2.textContent="❌ Try again! Think about how recursion works";
+                feedback2.style.color="red";
+            }
+        })
+        // Level 1challenge 3
+        const submitBtn3=document.getElementById("submit-btn-3");
+        const userInput3=document.getElementById("user-input-3");
+        const feedback3=document.getElementById("feedback-3");
+        //define the correct answer
+        const correctAnswer3="Greater";
+        //when submit btn is clicked
+        submitBtn3.addEventListener("click", () => {
+            const userAnswer = clean(userInput3.value);
+            if(challenge3Completed)
+            {
+                feedback3.textContent = "✅ You've already completed this challenge!";
+                feedback3.style.color = "gray";
+                showLevelCompletionButtons(feedback3);
+            }
+            else if (userAnswer === correctAnswer3) {
+                updateScore(20); // +20 points for Challenge3
+                challenge3Completed=true;
+                feedback3.innerHTML = `✅ Correct! You passed the final logic trap.<br>🎯 You got 20 points!<br><br>🎉 <strong>Final Score: ${score}</strong> — You're a <span style="color:#6c5ce7;">Code Quest Champion!</span>`;
+                feedback3.style.color = "green";
+                showLevelCompletionButtons(feedback3);
+            }
+            else {
+                feedback3.textContent = "❌ Not quite! Think about how the condition (x > 3) evaluates.";
+                feedback3.style.color = "red";
+            }
+        });
+        //LEVEL 2
+    </script>
+</body>
+</html>
